@@ -1,13 +1,6 @@
-Adafruit Python Library for DC + Stepper Motor HAT
+640 Mk1 Python driver
 =======================
 
-Python library for interfacing with the Adafruit Motor HAT for Raspberry Pi to control DC motors with speed control and Stepper motors with single, double, interleave and microstepping.
+Based on the [Adafruit Python Library for DC + Stepper Motor HAT](https://github.com/adafruit/Adafruit-Motor-HAT-Python-Library)
 
-Designed specifically to work with the Adafruit Motor Hat
-
-----> https://www.adafruit.com/product/2348
-
-Adafruit invests time and resources providing this open source code, please support Adafruit and open-source hardware by purchasing products from Adafruit!
-
-Written by Limor Fried for Adafruit Industries.
-MIT license, all text above must be included in any redistribution
+Python library for interfacing with the 640 Mk1 board for Raspberry Pi to control DC motors with speed control and Stepper motors with single, double, interleave and microstepping.
