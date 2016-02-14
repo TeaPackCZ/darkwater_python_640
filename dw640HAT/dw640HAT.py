@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import RPi.GPIO as GPIO
 from Adafruit_PWM_Servo_Driver import PWM
 import time
 
@@ -169,42 +170,75 @@ class dw_DCMotor:
 	def __init__(self, controller, num):
 		self.MC = controller
 		self.motornum = num
-                pwm = in1 = in2 = 0
+                modepin = in1 = in2 = 0
 
                 if (num == 0):
-                         pwm = 8
-                         in2 = 9
-                         in1 = 10
+						 modepin = 11
+                         in2 = 8
+                         in1 = 9
                 elif (num == 1):
-                         pwm = 13
-                         in2 = 12
+						 modepin = 11
+                         in2 = 10
                          in1 = 11
                 elif (num == 2):
-                         pwm = 2
-                         in2 = 3
-                         in1 = 4
+						 modepin = 13
+                         in2 = 7
+                         in1 = 6
                 elif (num == 3):
-                         pwm = 7
-                         in2 = 6
-                         in1 = 5
+						 modepin = 13
+                         in2 = 5
+                         in1 = 4
+				elif (num == 4):
+						 modepin = 15
+                         in2 = 0
+                         in1 = 1
+				elif (num == 5):
+						 modepin = 15
+                         in2 = 2
+                         in1 = 3
+
 		else:
-			raise NameError('MotorHAT Motor must be between 1 and 4 inclusive')
-                self.PWMpin = pwm
+			raise NameError('MotorHAT Motor must be between 1 and 6 inclusive')
+                self.MODEpin = modepin
                 self.IN1pin = in1
                 self.IN2pin = in2
+
+
+
+	def setMode(self, level):
+		if not self.MC:
+			return
+		if (level == dw_MotorCONTROL.ININ):
+			GPIO.output(self.MODEpin, GPIO.LOW)
+
+		if (level == dw_MotorCONTROL.PHASE):
+			GPIO.output(self.MODEpin, GPIO.HIGH)
+
 
 	def run(self, command):
 		if not self.MC:
 			return
-		if (command == dw_MotorCONTROL.FORWARD):
-			self.MC.setPin(self.IN2pin, 0)
-			self.MC.setPin(self.IN1pin, 1)
-		if (command == dw_MotorCONTROL.BACKWARD):
-			self.MC.setPin(self.IN1pin, 0)
-			self.MC.setPin(self.IN2pin, 1)
-		if (command == dw_MotorCONTROL.RELEASE):
-			self.MC.setPin(self.IN1pin, 0)
-			self.MC.setPin(self.IN2pin, 0)
+		if( GPIO.input( self.MODEpin ) == GPIO.LOW ):
+			if (command == dw_MotorCONTROL.FORWARD):
+				self.MC.setPin(self.IN2pin, 0)
+				self.MC.setPin(self.IN1pin, 1)
+			if (command == dw_MotorCONTROL.BACKWARD):
+				self.MC.setPin(self.IN1pin, 0)
+				self.MC.setPin(self.IN2pin, 1)
+			if (command == dw_MotorCONTROL.RELEASE):
+				self.MC.setPin(self.IN1pin, 0)
+				self.MC.setPin(self.IN2pin, 0)
+		else:
+			if (command == dw_MotorCONTROL.FORWARD):
+				self.MC.setPin(self.IN2pin, 0)
+				self.MC.setPin(self.IN1pin, 1)
+			if (command == dw_MotorCONTROL.BACKWARD):
+				self.MC.setPin(self.IN1pin, 0)
+				self.MC.setPin(self.IN2pin, 1)
+			if (command == dw_MotorCONTROL.RELEASE):
+				self.MC.setPin(self.IN1pin, 0)
+				self.MC.setPin(self.IN2pin, 0)
+				
 	def setSpeed(self, speed):
 		if (speed < 0):
 			speed = 0
@@ -223,13 +257,25 @@ class dw_MotorCONTROL:
 	INTERLEAVE = 3
 	MICROSTEP = 4
 
+	ININ = 0
+	PHASE = 1
+
 	def __init__(self, addr = 0x60, freq = 1600):
 		self._i2caddr = addr            # default addr on HAT
 		self._frequency = freq		# default @1600Hz PWM freq
-		self.motors = [ dw_DCMotor(self, m) for m in range(4) ]
+		self.motors = [ dw_DCMotor(self, m) for m in range(6) ]
 		# self.steppers = [ Adafruit_StepperMotor(self, 1), Adafruit_StepperMotor(self, 2) ]
 		self._pwm =  PWM(addr, debug=False)
 		self._pwm.setPWMFreq(self._frequency)
+
+		GPIO.setmode(GPIO.BCM)
+		GPIO.setup(11, GPIO.OUT)
+		GPIO.setup(13, GPIO.OUT)
+		GPIO.setup(15, GPIO.OUT)
+
+		GPIO.output(11, GPIO.LOW)
+		GPIO.output(13, GPIO.LOW)
+		GPIO.output(15, GPIO.LOW)
 
 	def setPin(self, pin, value):
 		if (pin < 0) or (pin > 15):
@@ -247,6 +293,6 @@ class dw_MotorCONTROL:
 	# 	return self.steppers[num-1]
 
 	def getMotor(self, num):
-		if (num < 1) or (num > 4):
-			raise NameError('MotorHAT Motor must be between 1 and 4 inclusive')
+		if (num < 1) or (num > 6):
+			raise NameError('MotorHAT Motor must be between 1 and 6 inclusive')
 		return self.motors[num-1]
