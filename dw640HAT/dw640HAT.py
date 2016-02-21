@@ -168,83 +168,62 @@ import time
 
 class dw_DCMotor:
 	def __init__(self, controller, num):
+		self.speed = 0
 		self.MC = controller
 		self.motornum = num
                 modepin = in1 = in2 = 0
 
                 if (num == 0):
-						 modepin = 11
-                         in2 = 8
-                         in1 = 9
+                         in2 = 8  #phase
+                         in1 = 9  #enable
                 elif (num == 1):
-						 modepin = 11
-                         in2 = 10
-                         in1 = 11
+                         in2 = 10 #phase
+                         in1 = 11 #enable
                 elif (num == 2):
-						 modepin = 13
-                         in2 = 7
-                         in1 = 6
+                         in2 = 7  #phase
+                         in1 = 6  #enable
                 elif (num == 3):
-						 modepin = 13
-                         in2 = 5
-                         in1 = 4
+                         in2 = 5  #phase
+                         in1 = 4  #enable
 				elif (num == 4):
-						 modepin = 15
-                         in2 = 0
-                         in1 = 1
+                         in2 = 0  #phase
+                         in1 = 1  #enable
 				elif (num == 5):
-						 modepin = 15
-                         in2 = 2
-                         in1 = 3
+                         in2 = 2  #phase
+                         in1 = 3  #enable
 
 		else:
 			raise NameError('MotorHAT Motor must be between 1 and 6 inclusive')
-                self.MODEpin = modepin
-                self.IN1pin = in1
-                self.IN2pin = in2
+                self.PHpin = in1
+                self.ENpin = in2
 
+	def setMotorSpeed(self, value):
+		if(value > 0) and (value <= 255):
+			self.run(self, dw_MotorCONTROL.FORWARD, value)
+		if(value == 0):
+			self.run(self, dw_MotorCONTROL.RELEASE, value)
+		if(value < 0) and (value >= -255):
+			self.run(self, dw_MotorCONTROL.BACKWARD, abs(value))
 
-
-	def setMode(self, level):
+	def run(self, command, speed = 0):
 		if not self.MC:
 			return
-		if (level == dw_MotorCONTROL.ININ):
-			GPIO.output(self.MODEpin, GPIO.LOW)
-
-		if (level == dw_MotorCONTROL.PHASE):
-			GPIO.output(self.MODEpin, GPIO.HIGH)
-
-
-	def run(self, command):
-		if not self.MC:
-			return
-		if( GPIO.input( self.MODEpin ) == GPIO.LOW ):
 			if (command == dw_MotorCONTROL.FORWARD):
-				self.MC.setPin(self.IN2pin, 0)
-				self.MC.setPin(self.IN1pin, 1)
+				self.MC.setPin(self.PHpin, 0)
+				self.MC._pwm.setPWM(self.ENpin, 0, speed*16)
 			if (command == dw_MotorCONTROL.BACKWARD):
-				self.MC.setPin(self.IN1pin, 0)
-				self.MC.setPin(self.IN2pin, 1)
+				self.MC.setPin(self.PHpin, 1)
+				self.MC._pwm.setPWM(self.ENpin, 0, speed*16)
 			if (command == dw_MotorCONTROL.RELEASE):
-				self.MC.setPin(self.IN1pin, 0)
-				self.MC.setPin(self.IN2pin, 0)
-		else:
-			if (command == dw_MotorCONTROL.FORWARD):
-				self.MC.setPin(self.IN2pin, 0)
-				self.MC.setPin(self.IN1pin, 1)
-			if (command == dw_MotorCONTROL.BACKWARD):
-				self.MC.setPin(self.IN1pin, 0)
-				self.MC.setPin(self.IN2pin, 1)
-			if (command == dw_MotorCONTROL.RELEASE):
-				self.MC.setPin(self.IN1pin, 0)
-				self.MC.setPin(self.IN2pin, 0)
-				
+				self.MC.setPin(self.PHpin, 0)
+				self.MC.setPin(self.ENpin, 0)
+
 	def setSpeed(self, speed):
 		if (speed < 0):
 			speed = 0
 		if (speed > 255):
 			speed = 255
-		self.MC._pwm.setPWM(self.PWMpin, 0, speed*16)
+		self.MC._pwm.setPWM(self.ENpin, 0, speed*16)
 
 class dw_MotorCONTROL:
 	FORWARD = 1
@@ -267,15 +246,15 @@ class dw_MotorCONTROL:
 		# self.steppers = [ Adafruit_StepperMotor(self, 1), Adafruit_StepperMotor(self, 2) ]
 		self._pwm =  PWM(addr, debug=False)
 		self._pwm.setPWMFreq(self._frequency)
-
+		# Just gonna default to high for now
 		GPIO.setmode(GPIO.BCM)
-		GPIO.setup(11, GPIO.OUT)
-		GPIO.setup(13, GPIO.OUT)
-		GPIO.setup(15, GPIO.OUT)
+		GPIO.setup(17, GPIO.OUT)
+		GPIO.setup(27, GPIO.OUT)
+		GPIO.setup(22, GPIO.OUT)
 
-		GPIO.output(11, GPIO.LOW)
-		GPIO.output(13, GPIO.LOW)
-		GPIO.output(15, GPIO.LOW)
+		GPIO.output(17, GPIO.HIGH)
+		GPIO.output(27, GPIO.HIGH)
+		GPIO.output(22, GPIO.HIGH)
 
 	def setPin(self, pin, value):
 		if (pin < 0) or (pin > 15):
