@@ -174,11 +174,11 @@ class dw_DCMotor:
                 modepin = in1 = in2 = 0
 
                 if (num == 0):
-                         in2 = 8  #phase
-                         in1 = 9  #enable
+                         in2 = 0  #phase
+                         in1 = 1  #enable
                 elif (num == 1):
-                         in2 = 10 #phase
-                         in1 = 11 #enable
+                         in2 = 2 #phase
+                         in1 = 3 #enable
                 elif (num == 2):
                          in2 = 7  #phase
                          in1 = 6  #enable
@@ -186,11 +186,11 @@ class dw_DCMotor:
                          in2 = 5  #phase
                          in1 = 4  #enable
                 elif (num == 4):
-                         in2 = 0  #phase
-                         in1 = 1  #enable
+                         in2 = 8  #phase
+                         in1 = 9  #enable
                 elif (num == 5):
-                         in2 = 2  #phase
-                         in1 = 3  #enable
+                         in2 = 10  #phase
+                         in1 = 11  #enable
                 else:
                         raise NameError('MotorHAT Motor must be between 1 and 6 inclusive')
 
@@ -249,16 +249,9 @@ class dw_MotorCONTROL:
                 self._pwm.setPWMFreq(self._frequency)
                 # Just gonna default to high for now
                 GPIO.setmode(GPIO.BCM)
-
                 GPIO.setwarnings(False)
-                
                 GPIO.setup(17, GPIO.OUT)
-                GPIO.setup(27, GPIO.OUT)
-                GPIO.setup(22, GPIO.OUT)
-
                 GPIO.output(17, GPIO.HIGH)
-                GPIO.output(27, GPIO.HIGH)
-                GPIO.output(22, GPIO.HIGH)
 
                 self.motors = [ dw_DCMotor(self, m) for m in range(6) ]
 
