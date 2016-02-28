@@ -1,4 +1,4 @@
-640 Mk1 Python driver
+640 Python driver
 =======================
 
 Based on the [Adafruit Python Library for DC + Stepper Motor HAT](https://github.com/adafruit/Adafruit-Motor-HAT-Python-Library)
