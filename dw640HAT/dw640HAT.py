@@ -174,17 +174,17 @@ class dw_DCMotor:
                 modepin = in1 = in2 = 0
 
                 if (num == 0):
-                         in2 = 0  #phase
-                         in1 = 1  #enable
+                         in2 = 2  #phase
+                         in1 = 3  #enable
                 elif (num == 1):
-                         in2 = 2 #phase
-                         in1 = 3 #enable
+                         in2 = 4 #phase
+                         in1 = 5 #enable
                 elif (num == 2):
-                         in2 = 7  #phase
-                         in1 = 6  #enable
+                         in2 = 15  #phase
+                         in1 = 14  #enable
                 elif (num == 3):
-                         in2 = 5  #phase
-                         in1 = 4  #enable
+                         in2 = 13  #phase
+                         in1 = 12  #enable
                 elif (num == 4):
                          in2 = 8  #phase
                          in1 = 9  #enable
