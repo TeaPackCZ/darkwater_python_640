@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import RPi.GPIO as GPIO
-from Adafruit_PWM_Servo_Driver import PWM
+from PCA9685 import PCA9685
 import time
 
 # class Adafruit_StepperMotor:
@@ -166,7 +166,7 @@ import time
 #                               lateststep = self.oneStep(dir, stepstyle)
 #                               time.sleep(s_per_s)
 
-class dw_DCMotor:
+class dw_Motor:
         def __init__(self, controller, num):
                 self.speed = 0
                 self.MC = controller
@@ -174,11 +174,11 @@ class dw_DCMotor:
                 modepin = in1 = in2 = 0
 
                 if (num == 0):
-                         in2 = 2  #phase
-                         in1 = 3  #enable
+                         in2 = 2   #phase
+                         in1 = 3   #enable
                 elif (num == 1):
-                         in2 = 4 #phase
-                         in1 = 5 #enable
+                         in2 = 4   #phase
+                         in1 = 5   #enable
                 elif (num == 2):
                          in2 = 15  #phase
                          in1 = 14  #enable
@@ -186,48 +186,99 @@ class dw_DCMotor:
                          in2 = 13  #phase
                          in1 = 12  #enable
                 elif (num == 4):
-                         in2 = 8  #phase
-                         in1 = 9  #enable
+                         in2 = 8   #phase
+                         in1 = 9   #enable
                 elif (num == 5):
                          in2 = 10  #phase
                          in1 = 11  #enable
                 else:
-                        raise NameError('MotorHAT Motor must be between 1 and 6 inclusive')
+                        raise NameError('Motors must be between 1 and 6 inclusive')
 
                 self.PHpin = in2
                 self.ENpin = in1
                 # switch off
-                self.run(dw_MotorCONTROL.RELEASE, 0)
+                self.run(dw_Controller.RELEASE, 0)
 
         def setMotorSpeed(self, value):
+                # Check for PWM values
+                if(value > 1000) and (value < 1500):
+                        self.run(dw_Controller.BACKWARD, round(translate(value,1500,1000, 0, 255)))
+                if(value > 1500) and (value <= 2000):
+                        self.run(dw_Controller.FORWARD, round(translate(value, 1500, 2000, 0, 255)))
+                if(value == 1500):
+                        self.run(dw_Controller.RELEASE, 0)
                 if(value > 0) and (value <= 255):
-                        self.run(dw_MotorCONTROL.FORWARD, value)
+                        self.run(dw_Controller.FORWARD, value)
                 if(value == 0):
-                        self.run(dw_MotorCONTROL.RELEASE, value)
+                        self.run(dw_Controller.RELEASE, value)
                 if(value < 0) and (value >= -255):
-                        self.run(dw_MotorCONTROL.BACKWARD, abs(value))
+                        self.run(dw_Controller.BACKWARD, abs(value))
 
         def run(self, command, speed = 0):
                 if not self.MC:
                         return
-                if (command == dw_MotorCONTROL.FORWARD):
+                if (command == dw_Controller.FORWARD):
                         self.MC.setPin(self.PHpin, 0)
                         self.MC._pwm.setPWM(self.ENpin, 0, speed*16)
-                if (command == dw_MotorCONTROL.BACKWARD):
+                if (command == dw_Controller.BACKWARD):
                         self.MC.setPin(self.PHpin, 1)
                         self.MC._pwm.setPWM(self.ENpin, 0, speed*16)
-                if (command == dw_MotorCONTROL.RELEASE):
+                if (command == dw_Controller.RELEASE):
                         self.MC.setPin(self.PHpin, 0)
                         self.MC.setPin(self.ENpin, 0)
 
-        def setSpeed(self, speed):
-                if (speed < 0):
-                        speed = 0
-                if (speed > 255):
-                        speed = 255
-                self.MC._pwm.setPWM(self.ENpin, 0, speed*16)
+class dw_Servo:
+        def __init__(self, controller, num, freq):
 
-class dw_MotorCONTROL:
+                _SERVO_MIN_MS = 1.250 #ms
+                _SERVO_MAX_MS = 1.750 #ms
+
+                self.speed = 0
+                self.MC = controller
+                self.cnum = num
+                self.pin = 0
+
+                self.freq = freq
+
+                self.servo_min = math.trunc( ( _SERVO_MIN_MS * 4096 ) / (1000.0 / self.freq ) - 1 )
+                self.servo_max = math.trunc( ( _SERVO_MAX_MS * 4096 ) / (1000.0 / self.freq ) - 1 )
+
+                self.servo_zero = math.trunc( ( self.servo_min + self.servo_max ) / 2 ) # halfway = 0 degrees
+
+
+                if (num == 0):
+                        self.pin = 9
+                elif (num == 1):
+                         self.pin = 8
+                else:
+                        raise NameError('Port must be between 0 and 1 inclusive')
+
+                # switch off
+                self.off()
+
+        def off(self):
+                self.MC.setPin(self.pin, 0)
+
+        def setAngle(self, angle):
+                pulse = self.servo_zero + ( (self.servo_zero - self.servo_min ) * angle / 80 )
+                print "angle=%s pulse=%s" % (angle, pulse)
+                #self.setPWMmS( pulse )
+
+        def setPWM(self, value):
+                if(value > 0):
+                        self.MC._pwm.setPWM(self.pin, 0, int(value) )
+                if(value == 0):
+                        self.off()
+
+        def setPWMmS(self, length_ms):
+                self.setPWM( round( length_ms * 4096 ) / ( 1000 / self.freq ) )
+
+        def setPWMuS(self, length_us):
+                self.setPWM( round( length_us * 4096 ) / ( 1000000 / self.freq ) )
+
+
+
+class dw_Controller:
         FORWARD = 1
         BACKWARD = 2
         BRAKE = 3
@@ -245,7 +296,7 @@ class dw_MotorCONTROL:
                 self._i2caddr = addr            # default addr on HAT
                 self._frequency = freq          # default @1600Hz PWM freq
                 # self.steppers = [ Adafruit_StepperMotor(self, 1), Adafruit_StepperMotor(self, 2) ]
-                self._pwm =  PWM(addr, debug=False)
+                self._pwm =  PCA9685(addr)
                 self._pwm.setPWMFreq(self._frequency)
                 # Just gonna default to high for now
                 GPIO.setmode(GPIO.BCM)
@@ -253,7 +304,8 @@ class dw_MotorCONTROL:
                 GPIO.setup(17, GPIO.OUT)
                 GPIO.output(17, GPIO.HIGH)
 
-                self.motors = [ dw_DCMotor(self, m) for m in range(6) ]
+                self.motors = [ dw_Motor(self, m) for m in range(6) ]
+                self.servos = [ dw_Servo(self, m) for m in range(2) ]
 
         def setPin(self, pin, value):
                 if (pin < 0) or (pin > 15):
@@ -267,9 +319,25 @@ class dw_MotorCONTROL:
 
         def getMotor(self, num):
                 if (num < 1) or (num > 6):
-                        raise NameError('MotorHAT Motor must be between 1 and 6 inclusive')
+                        raise NameError('Motors must be between 1 and 6 inclusive')
                 return self.motors[num-1]
+
+        def getServo(self, num):
+                if (num < 1) or (num > 2):
+                        raise NameError('Servos must be between 1 and 2 inclusive')
+                return self.servos[num-1]
 
         def allOff(self):
                 for y in range(5):
                         self.motors[y].run(dw_MotorCONTROL.RELEASE, 0)
+
+def translate(value, leftMin, leftMax, rightMin, rightMax):
+    # Figure out how 'wide' each range is
+    leftSpan = leftMax - leftMin
+    rightSpan = rightMax - rightMin
+
+    # Convert the left range into a 0-1 range (float)
+    valueScaled = float(value - leftMin) / float(leftSpan)
+
+    # Convert the 0-1 range into a value in the right range.
+    return rightMin + (valueScaled * rightSpan)
