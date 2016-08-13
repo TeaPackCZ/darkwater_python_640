@@ -297,7 +297,7 @@ class dw_Controller:
                 self._frequency = freq          # default @1600Hz PWM freq
                 # self.steppers = [ Adafruit_StepperMotor(self, 1), Adafruit_StepperMotor(self, 2) ]
                 self._pwm =  PCA9685(addr)
-                self._pwm.setPWMFreq(self._frequency)
+                self._pwm.set_pwm_freq(self._frequency)
                 # Just gonna default to high for now
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setwarnings(False)
