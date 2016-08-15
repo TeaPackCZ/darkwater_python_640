@@ -241,8 +241,6 @@ class dw_Servo:
 
                 self.freq = freq
 
-                print(self.freq)
-
                 self.servo_min = math.trunc( ( _SERVO_MIN_MS * 4096 ) / (1000.0 / self.freq ) - 1 )
                 self.servo_max = math.trunc( ( _SERVO_MAX_MS * 4096 ) / (1000.0 / self.freq ) - 1 )
 
@@ -274,12 +272,13 @@ class dw_Servo:
                         self.off()
 
         def setPWMmS(self, length_ms):
-                print( 1000 / self.freq )
+                print( self.freq )
+                print( 1000.0 / self.freq )
                 print( round( length_ms * 4096 ) )
-                self.setPWM( round( length_ms * 4096 ) / ( 1000 / self.freq ) )
+                self.setPWM( round( length_ms * 4096 ) / ( 1000.0 / self.freq ) )
 
         def setPWMuS(self, length_us):
-                self.setPWM( round( length_us * 4096 ) / ( 1000000 / self.freq ) )
+                self.setPWM( round( length_us * 4096 ) / ( 1000000.0 / self.freq ) )
 
 
 
