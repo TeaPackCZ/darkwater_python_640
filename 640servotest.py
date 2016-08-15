@@ -9,28 +9,27 @@ s1.off()
 s2.off()
 time.sleep(1)
 
-##time.sleep(10)
-print "Set forward - "
+print "Set 2000uS - "
 print "Servo 1"
 s1.setPWMuS(2000)
 time.sleep(1)
-# print "Servo 2"
-# s2.setPWMmS(2000)
-# time.sleep(1)
-# print "Set neutral - "
-# print "Servo 1"
-# s1.setPWMmS(1500)
-# time.sleep(1)
-# print "Servo 2"
-# s2.setPWMmS(1500)
-# time.sleep(1)
-# print "Set reverse - "
-# print "Servo 1"
-# s1.setPWMmS(1000)
-# time.sleep(1)
-# print "Servo 2"
-# s2.setPWMmS(1000)
-# time.sleep(1)
-# print "All off"
-# s1.off()
-# s2.off()
+print "Servo 2"
+s2.setPWMuS(2000)
+time.sleep(1)
+print "Set 1500uS - "
+print "Servo 1"
+s1.setPWMuS(1500)
+time.sleep(1)
+print "Servo 2"
+s2.setPWMuS(1500)
+time.sleep(1)
+print "Set 1000uS - "
+print "Servo 1"
+s1.setPWMuS(1000)
+time.sleep(1)
+print "Servo 2"
+s2.setPWMuS(1000)
+time.sleep(1)
+print "All off"
+s1.off()
+s2.off()

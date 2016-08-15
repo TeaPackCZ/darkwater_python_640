@@ -267,8 +267,6 @@ class dw_Servo:
 
         def setPWM(self, value):
                 if(value > 0):
-                    print( int(value) )
-                    print( self.pin )
                     self.MC._pwm.set_pwm(self.pin, 0, int(value) )
                 if(value == 0):
                     self.off()
