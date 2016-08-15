@@ -248,9 +248,9 @@ class dw_Servo:
 
 
                 if (num == 0):
-                        self.pin = 9
+                        self.pin = 0
                 elif (num == 1):
-                         self.pin = 8
+                         self.pin = 1
                 else:
                         raise NameError('Port must be between 0 and 1 inclusive')
 

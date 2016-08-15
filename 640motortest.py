@@ -10,6 +10,11 @@ m5 = dw.getMotor(5)
 m6 = dw.getMotor(6)
 
 m1.setMotorSpeed(0)
+m2.setMotorSpeed(0)
+m3.setMotorSpeed(0)
+m4.setMotorSpeed(0)
+m5.setMotorSpeed(0)
+m6.setMotorSpeed(0)
 time.sleep(1)
 
 ##time.sleep(10)
