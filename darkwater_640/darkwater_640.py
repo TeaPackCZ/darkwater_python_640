@@ -228,7 +228,7 @@ class dw_Motor:
                         self.MC.setPin(self.ENpin, 0)
 
 class dw_Servo:
-        def __init__(self, controller, num, freq):
+        def __init__(self, controller, num):
 
                 _SERVO_MIN_MS = 1.250 #ms
                 _SERVO_MAX_MS = 1.750 #ms
@@ -238,7 +238,7 @@ class dw_Servo:
                 self.cnum = num
                 self.pin = 0
 
-                self.freq = freq
+                self.freq = self.MC._frequency
 
                 self.servo_min = math.trunc( ( _SERVO_MIN_MS * 4096 ) / (1000.0 / self.freq ) - 1 )
                 self.servo_max = math.trunc( ( _SERVO_MAX_MS * 4096 ) / (1000.0 / self.freq ) - 1 )
