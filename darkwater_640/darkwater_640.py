@@ -3,6 +3,7 @@
 import RPi.GPIO as GPIO
 from PCA9685 import PCA9685
 import time
+import math
 
 # class Adafruit_StepperMotor:
 #       MICROSTEPS = 8
