@@ -227,6 +227,9 @@ class dw_Motor:
                 if (command == dw_Controller.RELEASE):
                         self.MC.setPin(self.PHpin, 0)
                         self.MC.setPin(self.ENpin, 0)
+        def off(self):
+                elf.run(dw_Controller.RELEASE, 0)
+
 
 class dw_Servo:
         def __init__(self, controller, num, freq):
