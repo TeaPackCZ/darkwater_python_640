@@ -241,6 +241,8 @@ class dw_Servo:
 
                 self.freq = self.MC._frequency
 
+                print(self.freq)
+
                 self.servo_min = math.trunc( ( _SERVO_MIN_MS * 4096 ) / (1000.0 / self.freq ) - 1 )
                 self.servo_max = math.trunc( ( _SERVO_MAX_MS * 4096 ) / (1000.0 / self.freq ) - 1 )
 
