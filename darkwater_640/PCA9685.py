@@ -101,7 +101,7 @@ class PCA9685(object):
         time.sleep(0.005)
         self._device.write8(MODE1, oldmode | 0x80)
 
-      def set_pwm_freq_min(self, freq_hz, correctionFactor=1.0):
+    def set_pwm_freq_min(self, freq_hz, correctionFactor=1.0):
         "Sets the PWM frequency"
         prescaleval = 25000000.0    # 25MHz
         prescaleval /= 4096.0       # 12-bit
@@ -122,7 +122,7 @@ class PCA9685(object):
         time.sleep(0.005)
         self.i2c.write8(self.__MODE1, oldmode | 0x80)
 
-      def set_pwm_freq_max(self, freq_hz, correctionFactor=1.0):
+    def set_pwm_freq_max(self, freq_hz, correctionFactor=1.0):
         "Sets the PWM frequency"
         prescaleval = 25000000.0    # 25MHz
         prescaleval /= 4096.0       # 12-bit
@@ -143,7 +143,7 @@ class PCA9685(object):
         time.sleep(0.005)
         self.i2c.write8(self.__MODE1, oldmode | 0x80)
 
-      def get_pwm_freq(self):
+    def get_pwm_freq(self):
         prescale = self.i2c.readU8(self.__PRESCALE)
         calcfreq = 25000000.0 / 4096.0 / ( float(prescale) + 1 )
         if (self.debug):
