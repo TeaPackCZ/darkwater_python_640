@@ -274,6 +274,8 @@ class dw_Servo:
                         self.off()
 
         def setPWMmS(self, length_ms):
+                print( 1000 / self.freq )
+                print( round( length_ms * 4096 ) )
                 self.setPWM( round( length_ms * 4096 ) / ( 1000 / self.freq ) )
 
         def setPWMuS(self, length_us):
