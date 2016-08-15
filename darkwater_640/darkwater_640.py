@@ -293,12 +293,12 @@ class dw_Controller:
         ININ = 0
         PHASE = 1
 
-        def __init__(self, addr = 0x60, freq = 100):
+        def __init__(self, addr = 0x60, freq = 100, correctionFactor = 1.0):
                 self._i2caddr = addr            # default addr on HAT
                 self._frequency = freq          # default @1600Hz PWM freq
                 # self.steppers = [ Adafruit_StepperMotor(self, 1), Adafruit_StepperMotor(self, 2) ]
                 self._pwm =  PCA9685(addr)
-                self._pwm.set_pwm_freq(self._frequency)
+                self._pwm.set_pwm_freq(self._frequency, correctionFactor)
                 # Just gonna default to high for now
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setwarnings(False)
