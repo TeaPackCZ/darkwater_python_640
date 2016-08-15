@@ -12,7 +12,7 @@ time.sleep(1)
 ##time.sleep(10)
 print "Set forward - "
 print "Servo 1"
-s1.setPWMmS(2000)
+s1.setPWMuS(2000)
 time.sleep(1)
 # print "Servo 2"
 # s2.setPWMmS(2000)

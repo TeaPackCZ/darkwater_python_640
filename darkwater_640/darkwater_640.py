@@ -248,11 +248,11 @@ class dw_Servo:
 
 
                 if (num == 0):
-                        self.pin = 0
+                    self.pin = 0
                 elif (num == 1):
-                         self.pin = 1
+                    self.pin = 1
                 else:
-                        raise NameError('Port must be between 0 and 1 inclusive')
+                    raise NameError('Port must be between 0 and 1 inclusive')
 
                 # switch off
                 self.off()
@@ -272,9 +272,6 @@ class dw_Servo:
                         self.off()
 
         def setPWMmS(self, length_ms):
-                print( self.freq )
-                print( 1000.0 / self.freq )
-                print( round( length_ms * 4096 ) )
                 self.setPWM( round( length_ms * 4096 ) / ( 1000.0 / self.freq ) )
 
         def setPWMuS(self, length_us):
