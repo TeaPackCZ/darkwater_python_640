@@ -1,21 +1,26 @@
 import time
-from dw640HAT import dw_MotorCONTROL, dw_DCMotor
+from darkwater_640.darkwater_640 import dw_Controller, dw_Servo, dw_Motor
 
-dw = dw_MotorCONTROL( addr=0x60 )
-m = dw.getMotor(1)
+dw = dw_Controller( addr=0x60 )
+m1 = dw.getMotor(1)
+m2 = dw.getMotor(2)
+m3 = dw.getMotor(3)
+m4 = dw.getMotor(4)
+m5 = dw.getMotor(5)
+m6 = dw.getMotor(6)
 
-m.run(dw_MotorCONTROL.RELEASE)
+m1.setMotorSpeed(0)
 time.sleep(1)
 
 ##time.sleep(10)
 print "Set forward"
-m.setMotorSpeed(255)
+m1.setMotorSpeed(255)
 time.sleep(1)
 print "stop"
-m.setMotorSpeed(0)
+m1.setMotorSpeed(0)
 time.sleep(1)
 print "Set reverse"
-m.setMotorSpeed(-255)
+m1.setMotorSpeed(-255)
 time.sleep(1)
 print "stop"
-m.run(dw_MotorCONTROL.RELEASE)
+m1.setMotorSpeed(0)
