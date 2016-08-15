@@ -295,7 +295,7 @@ class dw_Controller:
         ININ = 0
         PHASE = 1
 
-        def __init__(self, addr = 0x60, freq = 1600):
+        def __init__(self, addr = 0x60, freq = 100):
                 self._i2caddr = addr            # default addr on HAT
                 self._frequency = freq          # default @1600Hz PWM freq
                 # self.steppers = [ Adafruit_StepperMotor(self, 1), Adafruit_StepperMotor(self, 2) ]
