@@ -229,7 +229,7 @@ class dw_Motor:
                         self.MC.setPin(self.ENpin, 0)
 
 class dw_Servo:
-        def __init__(self, controller, num):
+        def __init__(self, controller, num, freq):
 
                 _SERVO_MIN_MS = 1.250 #ms
                 _SERVO_MAX_MS = 1.750 #ms
@@ -239,7 +239,7 @@ class dw_Servo:
                 self.cnum = num
                 self.pin = 0
 
-                self.freq = self.MC._frequency
+                self.freq = freq
 
                 print(self.freq)
 
@@ -308,7 +308,7 @@ class dw_Controller:
                 GPIO.output(17, GPIO.HIGH)
 
                 self.motors = [ dw_Motor(self, m) for m in range(6) ]
-                self.servos = [ dw_Servo(self, m) for m in range(2) ]
+                self.servos = [ dw_Servo(self, m, freq) for m in range(2) ]
 
         def setPin(self, pin, value):
                 if (pin < 0) or (pin > 15):
