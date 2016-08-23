@@ -181,17 +181,17 @@ class dw_Motor:
                          in2 = 4   #phase
                          in1 = 5   #enable
                 elif (num == 2):
-                         in2 = 15  #phase
-                         in1 = 14  #enable
+                         in2 = 6  #phase
+                         in1 = 7  #enable
                 elif (num == 3):
-                         in2 = 13  #phase
-                         in1 = 12  #enable
+                         in2 = 8  #phase
+                         in1 = 9  #enable
                 elif (num == 4):
-                         in2 = 8   #phase
-                         in1 = 9   #enable
+                         in2 = 10   #phase
+                         in1 = 11   #enable
                 elif (num == 5):
-                         in2 = 10  #phase
-                         in1 = 11  #enable
+                         in2 = 12  #phase
+                         in1 = 13  #enable
                 else:
                         raise NameError('Motors must be between 1 and 6 inclusive')
 
@@ -228,7 +228,7 @@ class dw_Motor:
                         self.MC.setPin(self.PHpin, 0)
                         self.MC.setPin(self.ENpin, 0)
         def off(self):
-                elf.run(dw_Controller.RELEASE, 0)
+                self.run(dw_Controller.RELEASE, 0)
 
 
 class dw_Servo:
