@@ -305,8 +305,8 @@ class dw_Controller:
                 # Just gonna default to high for now
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setwarnings(False)
-                GPIO.setup(17, GPIO.OUT)
-                GPIO.output(17, GPIO.HIGH)
+                GPIO.setup(13, GPIO.OUT)
+                GPIO.output(13, GPIO.HIGH)
 
                 self.motors = [ dw_Motor(self, m) for m in range(6) ]
                 self.servos = [ dw_Servo(self, m, freq) for m in range(2) ]
