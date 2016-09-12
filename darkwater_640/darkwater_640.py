@@ -338,7 +338,7 @@ class dw_Controller:
                 self.motors = [ dw_Motor(self, m) for m in range(6) ]
                 self.servos = [ dw_Servo(self, m, freq) for m in range(2) ]
 
-                self.steppers =  [ dw_Stepper(self, m) for m in range(3) ]
+                #self.steppers =  [ dw_Stepper(self, m) for m in range(3) ]
 
         def setPin(self, pin, value):
                 if (pin < 0) or (pin > 15):
