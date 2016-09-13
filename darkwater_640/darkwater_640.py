@@ -377,6 +377,11 @@ class dw_Controller:
                         raise NameError('Servos must be between 1 and 2 inclusive')
                 return self.servos[num-1]
 
+        def getStepper(self, num):
+                if (num < 1) or (num > 3):
+                        raise NameError('Stepper motors must be between 1 and 3 inclusive')
+                return self.steppers[num-1]
+
         def setAllPWM(self, value):
                 if(value > 0):
                         self._pwm.set_all_pwm(0, value)
