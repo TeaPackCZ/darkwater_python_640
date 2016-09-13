@@ -75,107 +75,107 @@ class dw_Stepper:
         def oneStep(self, dir, style):
                 pwm_a = pwm_b = 255
 
-              # first determine what sort of stepping procedure we're up to
-              if (style == dw_Controller.SINGLE):
-                      if ((self.currentstep/(self.MICROSTEPS/2)) % 2):
-                              # we're at an odd step, weird
-                              if (dir == dw_Controller.FORWARD):
-                                      self.currentstep += self.MICROSTEPS/2
-                              else:
-                                      self.currentstep -= self.MICROSTEPS/2
-                      else:
-                              # go to next even step
-                              if (dir == dw_Controller.FORWARD):
-                                      self.currentstep += self.MICROSTEPS
-                              else:
-                                      self.currentstep -= self.MICROSTEPS
-              if (style == dw_Controller.DOUBLE):
-                      if not (self.currentstep/(self.MICROSTEPS/2) % 2):
-                              # we're at an even step, weird
-                              if (dir == dw_Controller.FORWARD):
-                                      self.currentstep += self.MICROSTEPS/2
-                              else:
-                                      self.currentstep -= self.MICROSTEPS/2
-                      else:
-                              # go to next odd step
-                              if (dir == dw_Controller.FORWARD):
-                                      self.currentstep += self.MICROSTEPS
-                              else:
-                                      self.currentstep -= self.MICROSTEPS
-              if (style == dw_Controller.INTERLEAVE):
-                      if (dir == dw_Controller.FORWARD):
-                              self.currentstep += self.MICROSTEPS/2
-                      else:
-                              self.currentstep -= self.MICROSTEPS/2
+                # first determine what sort of stepping procedure we're up to
+                if (style == dw_Controller.SINGLE):
+                        if ((self.currentstep/(self.MICROSTEPS/2)) % 2):
+                                # we're at an odd step, weird
+                                if (dir == dw_Controller.FORWARD):
+                                        self.currentstep += self.MICROSTEPS/2
+                                else:
+                                        self.currentstep -= self.MICROSTEPS/2
+                        else:
+                                # go to next even step
+                                if (dir == dw_Controller.FORWARD):
+                                        self.currentstep += self.MICROSTEPS
+                                else:
+                                        self.currentstep -= self.MICROSTEPS
+                if (style == dw_Controller.DOUBLE):
+                        if not (self.currentstep/(self.MICROSTEPS/2) % 2):
+                                # we're at an even step, weird
+                                if (dir == dw_Controller.FORWARD):
+                                        self.currentstep += self.MICROSTEPS/2
+                                else:
+                                        self.currentstep -= self.MICROSTEPS/2
+                        else:
+                                # go to next odd step
+                                if (dir == dw_Controller.FORWARD):
+                                        self.currentstep += self.MICROSTEPS
+                                else:
+                                        self.currentstep -= self.MICROSTEPS
+                if (style == dw_Controller.INTERLEAVE):
+                        if (dir == dw_Controller.FORWARD):
+                                self.currentstep += self.MICROSTEPS/2
+                        else:
+                                self.currentstep -= self.MICROSTEPS/2
 
-              if (style == dw_Controller.MICROSTEP):
-                      if (dir == dw_Controller.FORWARD):
-                              self.currentstep += 1
-                      else:
-                              self.currentstep -= 1
+                if (style == dw_Controller.MICROSTEP):
+                        if (dir == dw_Controller.FORWARD):
+                                self.currentstep += 1
+                        else:
+                                self.currentstep -= 1
 
-                      # go to next 'step' and wrap around
-                      self.currentstep += self.MICROSTEPS * 4
-                      self.currentstep %= self.MICROSTEPS * 4
+                        # go to next 'step' and wrap around
+                        self.currentstep += self.MICROSTEPS * 4
+                        self.currentstep %= self.MICROSTEPS * 4
 
-                      pwm_a = pwm_b = 0
-                      if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
-                              pwm_a = self.MICROSTEP_CURVE[self.MICROSTEPS - self.currentstep]
-                              pwm_b = self.MICROSTEP_CURVE[self.currentstep]
-                      elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
-                              pwm_a = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS]
-                              pwm_b = self.MICROSTEP_CURVE[self.MICROSTEPS*2 - self.currentstep]
-                      elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
-                              pwm_a = self.MICROSTEP_CURVE[self.MICROSTEPS*3 - self.currentstep]
-                              pwm_b = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS*2]
-                      elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
+                        pwm_a = pwm_b = 0
+                        if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
+                                pwm_a = self.MICROSTEP_CURVE[self.MICROSTEPS - self.currentstep]
+                                pwm_b = self.MICROSTEP_CURVE[self.currentstep]
+                        elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
+                                pwm_a = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS]
+                                pwm_b = self.MICROSTEP_CURVE[self.MICROSTEPS*2 - self.currentstep]
+                        elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
+                                pwm_a = self.MICROSTEP_CURVE[self.MICROSTEPS*3 - self.currentstep]
+                                pwm_b = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS*2]
+                        elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
                                 pwm_a = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS*3]
                                 pwm_b = self.MICROSTEP_CURVE[self.MICROSTEPS*4 - self.currentstep]
 
 
-              # go to next 'step' and wrap around
-              self.currentstep += self.MICROSTEPS * 4
-              self.currentstep %= self.MICROSTEPS * 4
+                # go to next 'step' and wrap around
+                self.currentstep += self.MICROSTEPS * 4
+                self.currentstep %= self.MICROSTEPS * 4
 
-              # only really used for microstepping, otherwise always on!
-              self.MC._pwm.setPWM(self.PWMA, 0, pwm_a*16)
-              self.MC._pwm.setPWM(self.PWMB, 0, pwm_b*16)
+                # only really used for microstepping, otherwise always on!
+                self.MC._pwm.setPWM(self.PWMA, 0, pwm_a*16)
+                self.MC._pwm.setPWM(self.PWMB, 0, pwm_b*16)
 
-              # set up coil energizing!
-              coils = [0, 0, 0, 0]
+                # set up coil energizing!
+                coils = [0, 0, 0, 0]
 
-              if (style == dw_Controller.MICROSTEP):
-                      if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
-                              coils = [1, 1, 0, 0]
-                        elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
-                              coils = [0, 1, 1, 0]
-                        elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
-                              coils = [0, 0, 1, 1]
-                        elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
-                              coils = [1, 0, 0, 1]
-              else:
-                      step2coils = [  [1, 0, 0, 0],
-                              [1, 1, 0, 0],
-                              [0, 1, 0, 0],
-                              [0, 1, 1, 0],
-                              [0, 0, 1, 0],
-                              [0, 0, 1, 1],
-                              [0, 0, 0, 1],
-                              [1, 0, 0, 1] ]
-                      coils = step2coils[self.currentstep/(self.MICROSTEPS/2)]
+                if (style == dw_Controller.MICROSTEP):
+                        if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
+                                coils = [1, 1, 0, 0]
+                          elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
+                                coils = [0, 1, 1, 0]
+                          elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
+                                coils = [0, 0, 1, 1]
+                          elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
+                                coils = [1, 0, 0, 1]
+                else:
+                        step2coils = [  [1, 0, 0, 0],
+                                        [1, 1, 0, 0],
+                                        [0, 1, 0, 0],
+                                        [0, 1, 1, 0],
+                                        [0, 0, 1, 0],
+                                        [0, 0, 1, 1],
+                                        [0, 0, 0, 1],
+                                        [1, 0, 0, 1] ]
+                        coils = step2coils[self.currentstep/(self.MICROSTEPS/2)]
 
-              #print "coils state = " + str(coils)
-              self.MC.setPin(self.PHpinA, coils[0]) #ain2
-              self.MC.setPin(self.ENpinB, coils[1]) #bin1
-              self.MC.setPin(self.ENpinA, coils[2]) #ain1
-              self.MC.setPin(self.PHpinB, coils[3]) #bin2
+                #print "coils state = " + str(coils)
+                self.MC.setPin(self.PHpinA, coils[0]) #ain2
+                self.MC.setPin(self.ENpinB, coils[1]) #bin1
+                self.MC.setPin(self.ENpinA, coils[2]) #ain1
+                self.MC.setPin(self.PHpinB, coils[3]) #bin2
 
-              #self.PHpinA = ain2
-              #  self.ENpinA = ain1
-              #  self.PHpinB = bin2
-              #  self.ENpinB = bin1
+                #self.PHpinA = ain2
+                #  self.ENpinA = ain1
+                #  self.PHpinB = bin2
+                #  self.ENpinB = bin1
 
-              return self.currentstep
+                return self.currentstep
 
         def step(self, steps, direction, stepstyle):
               s_per_s = self.sec_per_step
