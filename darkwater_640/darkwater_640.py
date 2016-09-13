@@ -138,8 +138,8 @@ class dw_Stepper:
                 self.currentstep %= self.MICROSTEPS * 4
 
                 # only really used for microstepping, otherwise always on!
-                self.MC._pwm.setPWM(self.PWMA, 0, pwm_a*16)
-                self.MC._pwm.setPWM(self.PWMB, 0, pwm_b*16)
+                self.MC._pwm.set_pwm(self.PWMA, 0, pwm_a*16)
+                self.MC._pwm.set_pwm(self.PWMB, 0, pwm_b*16)
 
                 # set up coil energizing!
                 coils = [0, 0, 0, 0]
