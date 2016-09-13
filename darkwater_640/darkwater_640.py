@@ -25,27 +25,27 @@ class dw_Stepper:
                 self.currentstep = 0
 
                 if (num == 0):
-                        ain2 = 2   #phase
-                        ain1 = 3   #enable
-                        bin2 = 4   #phase
-                        bin1 = 5   #enable
+                        ain1 = 2   #phase
+                        ain2 = 3   #enable
+                        bin1 = 4   #phase
+                        bin2 = 5   #enable
                 elif (num == 1):
-                        ain2 = 6   #phase
-                        ain1 = 7   #enable
-                        bin2 = 8   #phase
-                        bin1 = 9   #enable
+                        ain1 = 6   #phase
+                        ain2 = 7   #enable
+                        bin1 = 8   #phase
+                        bin2 = 9   #enable
                 elif (num == 2):
-                        ain2 = 10   #phase
-                        ain1 = 11   #enable
-                        bin2 = 12   #phase
-                        bin1 = 13   #enable
+                        ain1 = 10   #phase
+                        ain2 = 11   #enable
+                        bin1 = 12   #phase
+                        bin2 = 13   #enable
                 else:
                         raise NameError('MotorHAT Stepper must be between 1 and 3 inclusive')
 
-                self.PHpinA = ain2
-                self.ENpinA = ain1
-                self.PHpinB = bin2
-                self.ENpinB = bin1
+                self.ain1 = ain1
+                self.ain2 = ain2
+                self.bin1 = bin1
+                self.bin2 = bin2
 
                 # switch off both drivers
                 self.run(dw_Controller.RELEASE, 0)
@@ -60,10 +60,10 @@ class dw_Stepper:
                         self.MC.setPin(self.PHpin, 1)
                         self.MC._pwm.set_pwm(self.ENpin, 0, speed*16)
                 if (command == dw_Controller.RELEASE):
-                        self.MC.setPin(self.PHpinA, 0)
-                        self.MC.setPin(self.ENpinA, 0)
-                        self.MC.setPin(self.PHpinB, 0)
-                        self.MC.setPin(self.ENpinB, 0)
+                        self.MC.setPin(self.ain1, 0)
+                        self.MC.setPin(self.ain2, 0)
+                        self.MC.setPin(self.bin1, 0)
+                        self.MC.setPin(self.bin2, 0)
 
         def off(self):
                 self.run(dw_Controller.RELEASE, 0)
@@ -165,10 +165,10 @@ class dw_Stepper:
                         coils = step2coils[self.currentstep/(self.MICROSTEPS/2)]
 
                 #print "coils state = " + str(coils)
-                self.MC.setPin(self.PHpinA, coils[0]) #ain2
-                self.MC.setPin(self.ENpinB, coils[1]) #bin1
-                self.MC.setPin(self.ENpinA, coils[2]) #ain1
-                self.MC.setPin(self.PHpinB, coils[3]) #bin2
+                self.MC.setPin(self.ain1, coils[0]) #ain2
+                self.MC.setPin(self.bin1, coils[1]) #bin1
+                self.MC.setPin(self.ain2, coils[2]) #ain1
+                self.MC.setPin(self.bin2, coils[3]) #bin2
 
                 #self.PHpinA = ain2
                 #  self.ENpinA = ain1
