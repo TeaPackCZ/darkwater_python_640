@@ -147,11 +147,11 @@ class dw_Stepper:
                 if (style == dw_Controller.MICROSTEP):
                         if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
                                 coils = [1, 1, 0, 0]
-                          elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
+                        elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
                                 coils = [0, 1, 1, 0]
-                          elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
+                        elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
                                 coils = [0, 0, 1, 1]
-                          elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
+                        elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
                                 coils = [1, 0, 0, 1]
                 else:
                         step2coils = [  [1, 0, 0, 0],
