@@ -61,17 +61,12 @@ class dw_Stepper:
         def run(self, command, speed = 0):
                 if not self.MC:
                         return
-                if (command == dw_Controller.FORWARD):
-                        self.MC.setPin(self.PHpin, 0)
-                        self.MC._pwm.set_pwm(self.ENpin, 0, speed*16)
-                if (command == dw_Controller.REVERSE):
-                        self.MC.setPin(self.PHpin, 1)
-                        self.MC._pwm.set_pwm(self.ENpin, 0, speed*16)
+                
                 if (command == dw_Controller.STOP):
-                        self.MC.setPin(self.ain1, 0)
-                        self.MC.setPin(self.ain2, 0)
-                        self.MC.setPin(self.bin1, 0)
-                        self.MC.setPin(self.bin2, 0)
+                        self.MC.setPin(self.ain1, 1)
+                        self.MC.setPin(self.ain2, 1)
+                        self.MC.setPin(self.bin1, 1)
+                        self.MC.setPin(self.bin2, 1)
 
         def off(self):
                 self.run(dw_Controller.STOP, 0)
