@@ -13,7 +13,7 @@ class dw_Stepper:
         # a sinusoidal curve NOT LINEAR!
         #MICROSTEP_CURVE = [0, 25, 50, 74, 98, 120, 141, 162, 180, 197, 212, 225, 236, 244, 250, 253, 255]
 
-        def __init__(self, controller, num, steps=200):
+        def __init__(self, controller, num, steps=200, forcemode=False):
                 self.speed = 0
                 self.MC = controller
                 self.motornum = num
@@ -24,23 +24,28 @@ class dw_Stepper:
                 self.steppingcounter = 0
                 self.currentstep = 0
 
-                if (num == 0):
-                        ain1 = 2   #phase
-                        ain2 = 3   #enable
-                        bin1 = 4   #phase
-                        bin2 = 5   #enable
-                elif (num == 1):
-                        ain1 = 6   #phase
-                        ain2 = 7   #enable
-                        bin1 = 8   #phase
-                        bin2 = 9   #enable
-                elif (num == 2):
-                        ain1 = 10   #phase
-                        ain2 = 11   #enable
-                        bin1 = 12   #phase
-                        bin2 = 13   #enable
+                if(self.MC.getMode() != dw_Controller.ININ && forcemode != True ):
+                        raise NameError('Mode needs to be set to ININ for stepper mode operation')
                 else:
-                        raise NameError('MotorHAT Stepper must be between 1 and 3 inclusive')
+                        self.MC.setmode(dw_Controller.ININ)
+
+                if (num == 0):
+                        ain1 = 2 
+                        ain2 = 3  
+                        bin1 = 4  
+                        bin2 = 5  
+                elif (num == 1):
+                        ain1 = 6  
+                        ain2 = 7  
+                        bin1 = 8  
+                        bin2 = 9  
+                elif (num == 2):
+                        ain1 = 10  
+                        ain2 = 11  
+                        bin1 = 12  
+                        bin2 = 13  
+                else:
+                        raise NameError('Stepper must be between 1 and 3 inclusive')
 
                 self.ain1 = ain1
                 self.ain2 = ain2
@@ -102,11 +107,6 @@ class dw_Stepper:
                                         self.currentstep += self.MICROSTEPS
                                 else:
                                         self.currentstep -= self.MICROSTEPS
-                if (style == dw_Controller.INTERLEAVE):
-                        if (dir == dw_Controller.FORWARD):
-                                self.currentstep += self.MICROSTEPS/2
-                        else:
-                                self.currentstep -= self.MICROSTEPS/2
 
                 if (style == dw_Controller.MICROSTEP):
                         if (dir == dw_Controller.FORWARD):
@@ -137,10 +137,6 @@ class dw_Stepper:
                 self.currentstep += self.MICROSTEPS * 4
                 self.currentstep %= self.MICROSTEPS * 4
 
-                # only really used for microstepping, otherwise always on!
-                #self.MC._pwm.set_pwm(self.PWMA, 0, pwm_a*16)
-                #self.MC._pwm.set_pwm(self.PWMB, 0, pwm_b*16)
-
                 # set up coil energizing!
                 coils = [0, 0, 0, 0]
 
@@ -164,16 +160,10 @@ class dw_Stepper:
                                         [1, 0, 0, 1] ]
                         coils = step2coils[self.currentstep/(self.MICROSTEPS/2)]
 
-                #print "coils state = " + str(coils)
                 self.MC.setPin(self.ain1, coils[0]) #ain2
                 self.MC.setPin(self.bin1, coils[1]) #bin1
                 self.MC.setPin(self.ain2, coils[2]) #ain1
                 self.MC.setPin(self.bin2, coils[3]) #bin2
-
-                #self.PHpinA = ain2
-                #  self.ENpinA = ain1
-                #  self.PHpinB = bin2
-                #  self.ENpinB = bin1
 
                 return self.currentstep
 
@@ -181,8 +171,6 @@ class dw_Stepper:
               s_per_s = self.sec_per_step
               lateststep = 0
 
-              if (stepstyle == dw_Controller.INTERLEAVE):
-                      s_per_s = s_per_s / 2.0
               if (stepstyle == dw_Controller.MICROSTEP):
                       s_per_s /= self.MICROSTEPS
                       steps *= self.MICROSTEPS
@@ -228,40 +216,59 @@ class dw_Motor:
                 else:
                         raise NameError('Motors must be between 1 and 6 inclusive')
 
+                # for phase enable
                 self.PHpin = in2
                 self.ENpin = in1
+                # for in/in
+                self.IN2pin = in2
+                self.IN1pin = in1
                 # switch off
-                self.run(dw_Controller.RELEASE, 0)
+                self.run(dw_Controller.STOP, 0)
 
         def setMotorSpeed(self, value):
                 # Check for PWM values
                 if(value > 1000) and (value < 1500):
-                        self.run(dw_Controller.BACKWARD, round(translate(value,1500,1000, 0, 255)))
+                        self.run(dw_Controller.REVERSE, round(translate(value,1500,1000, 0, 255)))
                 if(value > 1500) and (value <= 2000):
                         self.run(dw_Controller.FORWARD, round(translate(value, 1500, 2000, 0, 255)))
                 if(value == 1500):
-                        self.run(dw_Controller.RELEASE, 0)
+                        self.run(dw_Controller.STOP, 0)
                 if(value > 0) and (value <= 255):
                         self.run(dw_Controller.FORWARD, value)
                 if(value == 0):
-                        self.run(dw_Controller.RELEASE, value)
+                        self.run(dw_Controller.STOP, value)
                 if(value < 0) and (value >= -255):
-                        self.run(dw_Controller.BACKWARD, abs(value))
+                        self.run(dw_Controller.REVERSE, abs(value))
 
         def run(self, command, speed = 0):
                 if not self.MC:
                         return
-                if (command == dw_Controller.FORWARD):
-                        self.MC.setPin(self.PHpin, 0)
-                        self.MC._pwm.set_pwm(self.ENpin, 0, speed*16)
-                if (command == dw_Controller.BACKWARD):
-                        self.MC.setPin(self.PHpin, 1)
-                        self.MC._pwm.set_pwm(self.ENpin, 0, speed*16)
-                if (command == dw_Controller.RELEASE):
-                        self.MC.setPin(self.PHpin, 0)
-                        self.MC.setPin(self.ENpin, 0)
+                if (self.MC.getMode() == dw_Controller.PHASE):
+                        if (command == dw_Controller.FORWARD):
+                                self.MC.setPin(self.PHpin, 0)
+                                self.MC._pwm.set_pwm(self.ENpin, 0, speed*16)
+                        if (command == dw_Controller.REVERSE):
+                                self.MC.setPin(self.PHpin, 1)
+                                self.MC._pwm.set_pwm(self.ENpin, 0, speed*16)
+                        if (command == dw_Controller.STOP):
+                                self.MC.setPin(self.PHpin, 0)
+                                self.MC.setPin(self.ENpin, 0)
+                else:   ## IN/IN mode
+                        if (command == dw_Controller.FORWARD):
+                                self.MC.setPin(self.IN2pin, 0)
+                                self.MC._pwm.set_pwm(self.IN1pin, 0, speed*16)
+                        if (command == dw_Controller.REVERSE):
+                                self.MC.setPin(self.IN1pin, 0)
+                                self.MC._pwm.set_pwm(self.IN2pin, 0, speed*16)
+                        if (command == dw_Controller.STOP):
+                                self.MC.setPin(self.IN1pin, 1)
+                                self.MC.setPin(self.IN2pin, 1)
+                        if (command == dw_Controller.COAST):
+                                self.MC.setPin(self.IN1pin, 0)
+                                self.MC.setPin(self.IN2pin, 0)   
+
         def off(self):
-                self.run(dw_Controller.RELEASE, 0)
+                self.run(dw_Controller.STOP, 0)
 
 
 class dw_Servo:
@@ -317,9 +324,11 @@ class dw_Servo:
 
 class dw_Controller:
         FORWARD = 1
-        BACKWARD = 2
-        BRAKE = 3
-        RELEASE = 4
+        REVERSE = 2
+        BRAKEFORWARD = 3
+        BRAKEREVERSE = 4
+        STOP = 5 #brake
+        COAST = 6 # in/in only
 
         SINGLE = 1
         DOUBLE = 2
@@ -339,13 +348,24 @@ class dw_Controller:
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setwarnings(False)
                 GPIO.setup(27, GPIO.OUT)
-                #GPIO.output(27, GPIO.HIGH)  # set for en/phase mode - low = in/in mode
-                GPIO.output(27, GPIO.LOW)  # set for en/phase mode - low = in/in mode
+
+                self.setMode(self.ININ) # set high for en/phase mode - low = in/in mode
 
                 self.motors = [ dw_Motor(self, m) for m in range(6) ]
                 self.servos = [ dw_Servo(self, m, freq) for m in range(2) ]
 
                 self.steppers =  [ dw_Stepper(self, m) for m in range(3) ]
+
+        def setMode(self, mode = 1):
+                if (mode == self.ININ):
+                        self._mode = self.ININ
+                        GPIO.output(27, GPIO.HIGH)
+                else:
+                        self._mode = self.PHASE
+                        GPIO.output(27, GPIO.LOW)
+
+        def getMode(self):
+                return self._mode
 
         def setPin(self, pin, value):
                 if (pin < 0) or (pin > 15):
