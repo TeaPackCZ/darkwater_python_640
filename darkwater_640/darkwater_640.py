@@ -56,7 +56,7 @@ class dw_Stepper:
                 self.bin2 = bin2
 
                 # switch off both drivers
-                self.run(dw_Controller.RELEASE, 0)
+                self.run(dw_Controller.STOP, 0)
 
         def run(self, command, speed = 0):
                 if not self.MC:
