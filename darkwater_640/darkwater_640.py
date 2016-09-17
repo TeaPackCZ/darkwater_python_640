@@ -5,6 +5,9 @@ from PCA9685 import PCA9685
 import time
 import math
 
+# Stepper motor code based on Adafruit Python Library for DC + Stepper Motor HAT
+# Written by Limor Fried for Adafruit Industries. MIT license.
+
 class dw_Stepper:
         MICROSTEPS = 8
         MICROSTEP_CURVE = [0, 50, 98, 142, 180, 212, 236, 250, 255]
@@ -61,17 +64,17 @@ class dw_Stepper:
                 if (command == dw_Controller.FORWARD):
                         self.MC.setPin(self.PHpin, 0)
                         self.MC._pwm.set_pwm(self.ENpin, 0, speed*16)
-                if (command == dw_Controller.BACKWARD):
+                if (command == dw_Controller.REVERSE):
                         self.MC.setPin(self.PHpin, 1)
                         self.MC._pwm.set_pwm(self.ENpin, 0, speed*16)
-                if (command == dw_Controller.RELEASE):
+                if (command == dw_Controller.STOP):
                         self.MC.setPin(self.ain1, 0)
                         self.MC.setPin(self.ain2, 0)
                         self.MC.setPin(self.bin1, 0)
                         self.MC.setPin(self.bin2, 0)
 
         def off(self):
-                self.run(dw_Controller.RELEASE, 0)
+                self.run(dw_Controller.STOP, 0)
 
         def setSpeed(self, rpm):
                 self.sec_per_step = 60.0 / (self.revsteps * rpm)
