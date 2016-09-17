@@ -30,7 +30,7 @@ class dw_Stepper:
                 if(self.MC.getMode() != dw_Controller.ININ and forcemode != True ):
                         raise NameError('Mode needs to be set to ININ for stepper mode operation')
                 else:
-                        self.MC.setmode(dw_Controller.ININ)
+                        self.MC.setMode(dw_Controller.ININ)
 
                 if (num == 0):
                         ain1 = 2 
