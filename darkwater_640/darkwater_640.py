@@ -362,10 +362,10 @@ class dw_Controller:
         def setMode(self, mode = 1):
                 if (mode == self.ININ):
                         self._mode = self.ININ
-                        GPIO.output(27, GPIO.HIGH)
+                        GPIO.output(27, GPIO.LOW)
                 else:
                         self._mode = self.PHASE
-                        GPIO.output(27, GPIO.LOW)
+                        GPIO.output(27, GPIO.HIGH)
 
         def getMode(self):
                 return self._mode
