@@ -27,7 +27,7 @@ class dw_Stepper:
                 self.steppingcounter = 0
                 self.currentstep = 0
 
-                if(self.MC.getMode() != dw_Controller.ININ && forcemode != True ):
+                if(self.MC.getMode() != dw_Controller.ININ and forcemode != True ):
                         raise NameError('Mode needs to be set to ININ for stepper mode operation')
                 else:
                         self.MC.setmode(dw_Controller.ININ)
