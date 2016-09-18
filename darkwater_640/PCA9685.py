@@ -133,7 +133,7 @@ class PCA9685(object):
           print("Estimated pre-scale: %d" % prescaleval)
         prescale = math.ceil(prescaleval * correctionFactor + 0.5)
         if (self.debug):
-          print "Final pre-scale: %d" % prescale
+          print("Final pre-scale: %d" % prescale)
 
         oldmode = self.i2c.readU8(self.__MODE1);
         newmode = (oldmode & 0x7F) | 0x10             # sleep
