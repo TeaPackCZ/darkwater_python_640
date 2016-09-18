@@ -173,8 +173,6 @@ class dw_Stepper:
                       s_per_s /= self.MICROSTEPS
                       steps *= self.MICROSTEPS
 
-              print s_per_s, " sec per step"
-
               for s in range(steps):
                       lateststep = self.oneStep(direction, stepstyle)
                       time.sleep(s_per_s)
