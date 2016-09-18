@@ -301,7 +301,7 @@ class dw_Servo:
 
         def setAngle(self, angle):
                 pulse = self.servo_zero + ( (self.servo_zero - self.servo_min ) * angle / 80 )
-                print "angle=%s pulse=%s" % (angle, pulse)
+                #print "angle=%s pulse=%s" % (angle, pulse)
                 #self.setPWMmS( pulse )
 
         def setPWM(self, value):
