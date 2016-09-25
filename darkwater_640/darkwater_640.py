@@ -71,7 +71,7 @@ class dw_Stepper:
         def off(self):
                 self.run(dw_Controller.STOP, 0)
 
-        def setSpeed(self, rpm):
+        def setMotorSpeed(self, rpm):
                 self.sec_per_step = 60.0 / (self.revsteps * rpm)
                 self.steppingcounter = 0
 
