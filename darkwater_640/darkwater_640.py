@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import RPi.GPIO as GPIO
-from PCA9685 import PCA9685
+from .PCA9685 import PCA9685
 import time
 import math
 
@@ -71,7 +71,7 @@ class dw_Stepper:
         def off(self):
                 self.run(dw_Controller.STOP, 0)
 
-        def setSpeed(self, rpm):
+        def setMotorSpeed(self, rpm):
                 self.sec_per_step = 60.0 / (self.revsteps * rpm)
                 self.steppingcounter = 0
 
@@ -172,8 +172,6 @@ class dw_Stepper:
               if (stepstyle == dw_Controller.MICROSTEP):
                       s_per_s /= self.MICROSTEPS
                       steps *= self.MICROSTEPS
-
-              print s_per_s, " sec per step"
 
               for s in range(steps):
                       lateststep = self.oneStep(direction, stepstyle)
@@ -303,7 +301,7 @@ class dw_Servo:
 
         def setAngle(self, angle):
                 pulse = self.servo_zero + ( (self.servo_zero - self.servo_min ) * angle / 80 )
-                print "angle=%s pulse=%s" % (angle, pulse)
+                #print "angle=%s pulse=%s" % (angle, pulse)
                 #self.setPWMmS( pulse )
 
         def setPWM(self, value):
