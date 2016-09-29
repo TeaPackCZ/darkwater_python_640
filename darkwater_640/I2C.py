@@ -19,10 +19,10 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-import logging
-import subprocess
+import .logging
+import .subprocess
 
-import Platform as Platform
+import .Platform as Platform
 
 
 def reverseByteOrder(data):
@@ -93,7 +93,7 @@ class Device(object):
         self._address = address
         if i2c_interface is None:
             # Use pure python I2C interface if none is specified.
-            import smbus
+            import .smbus
             self._bus = smbus.SMBus(busnum)
         else:
             # Otherwise use the provided class to create an smbus interface.
