@@ -1,5 +1,5 @@
 import time
-from darkwater_640.darkwater_640 import dw_Controller, dw_Servo, dw_Motor
+from darkwater_640 import dw_Controller, dw_Servo
 
 dw = dw_Controller( addr=0x60 )
 s1 = dw.getServo(1)
