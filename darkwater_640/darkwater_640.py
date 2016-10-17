@@ -63,10 +63,10 @@ class dw_Stepper:
                         return
                 
                 if (command == dw_Controller.STOP):
-                        self.MC.setPin(self.ain1, 1)
-                        self.MC.setPin(self.ain2, 1)
-                        self.MC.setPin(self.bin1, 1)
-                        self.MC.setPin(self.bin2, 1)
+                        self.MC.setPin(self.ain1, 0)
+                        self.MC.setPin(self.ain2, 0)
+                        self.MC.setPin(self.bin1, 0)
+                        self.MC.setPin(self.bin2, 0)
 
         def off(self):
                 self.run(dw_Controller.STOP, 0)
@@ -223,7 +223,7 @@ class dw_Motor:
 
         def setMotorSpeed(self, value):
                 # Check for PWM values
-                if(value > 1000) and (value < 1500):
+                if(value >= 1000) and (value < 1500):
                         self.run(dw_Controller.REVERSE, round(translate(value,1500,1000, 0, 255)))
                 if(value > 1500) and (value <= 2000):
                         self.run(dw_Controller.FORWARD, round(translate(value, 1500, 2000, 0, 255)))
