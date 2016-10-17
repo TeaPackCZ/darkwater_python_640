@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name              = 'darkwater_640',
-      version           = '1.0.1',
+      version           = '1.0.2',
       author            = 'Team Dark Water',
       author_email      = 'team@darkwater.io',
       description       = 'Library for Dark Water 640 board',
